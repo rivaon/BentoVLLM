@@ -16,8 +16,8 @@ else:
 
 
 class BentoArgs(Args):
-    bentovllm_model_id: str = 'meta-llama/Meta-Llama-3.1-8B-Instruct'
-    bentovllm_max_tokens: int = 2048
+    bentovllm_model_id: str = 'rivaon/canberra'
+    bentovllm_max_tokens: int = 512
 
     disable_log_requests: bool = True
     max_log_len: int = 1000
@@ -25,7 +25,7 @@ class BentoArgs(Args):
     disable_log_stats: bool = True
     use_tqdm_on_load: bool = False
     task: str = 'generate'
-    max_model_len: int = 4096
+    max_model_len: int = 8192
     max_num_seqs: int = 256
     enable_auto_tool_choice: bool = True
     tool_call_parser: str = 'llama3_json'
@@ -42,9 +42,9 @@ openai_api_app = fastapi.FastAPI()
 
 @bentoml.asgi_app(openai_api_app, path='/v1')
 @bentoml.service(
-    name='llama3.1-8b-instruct',
+    name='rivaon/canberra',
     traffic={'timeout': 300},
-    resources={'gpu': bento_args.tensor_parallel_size, 'gpu_type': 'nvidia-l4'},
+    resources={'gpu': bento_args.tensor_parallel_size, 'gpu_type': 'nvidia-h100'},
     envs=[
         {'name': 'HF_TOKEN'},
         {'name': 'VLLM_ATTENTION_BACKEND', 'value': 'FLASH_ATTN'},
